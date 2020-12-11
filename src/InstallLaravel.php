@@ -29,7 +29,7 @@ class InstallLaravel
 
         $this->createDockerCompose(get_defined_vars());
         $this->updateEnv($postgresPort, $redisPort);
-        $this->updatePhpUnitXml($testDbPostgresPort);
+        $this->updatePhpUnitXml($testDbPostgresPort, $testRedisPort);
         $this->updatePackageJson();
         $this->updateTrustProxies();
         $this->updateTestCase();
@@ -84,10 +84,13 @@ class InstallLaravel
         $this->fileInsertAfter($this->projectName . '/package.json', "\"scripts\": {", $this->packageJsonFile());
     }
 
-    public function updatePhpUnitXml($testDbPostgresPort)
+    public function updatePhpUnitXml($testDbPostgresPort, $testRedisPort)
     {
         $connection = "postgres://webapp:secret@localhost:$testDbPostgresPort/webapp?sslmode=disable";
-        $replace = "\n        <server name=\"DATABASE_URL\" value=\"{$connection}\"/>\n        <server name=\"DB_CONNECTION\" value=\"pgsql\"/>";
+        $replace = "\n        <server name=\"DATABASE_URL\" value=\"{$connection}\"/>\n" .
+                     "        <server name=\"DB_CONNECTION\" value=\"pgsql\"/>\n" .
+                     "        <server name=\"REDIS_PORT\" value=\"{$testRedisPort}\"/>\n"
+        ;
         $this->fileInsertAfter($this->projectName . '/phpunit.xml', '<php>',
             $replace);
     }

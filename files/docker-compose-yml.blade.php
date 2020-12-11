@@ -31,7 +31,7 @@ services:
     ports:
       - "{{ $redisPort }}:6379"
 
-  redis_text:
+  redis_test:
     image: redis:{{ $redisVersion }}
     ports:
       - "{{ $testRedisPort }}:6379"
