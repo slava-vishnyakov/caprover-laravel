@@ -28,6 +28,7 @@ class InstallLaravel
         $testElasticPort = $elasticPort + 1;
 
         $this->createDockerCompose(get_defined_vars());
+        $this->createDockerignore();
         $this->updateEnv($postgresPort, $redisPort);
         $this->updatePhpUnitXml($testDbPostgresPort, $testRedisPort);
         $this->updatePackageJson();
@@ -191,5 +192,10 @@ class InstallLaravel
         $this->fileInsertAfter($this->projectName . '/app/Http/Middleware/TrustProxies.php',
             'protected $proxies',
             "= '*'");
+    }
+
+    private function createDockerignore()
+    {
+        copy(__DIR__ . '/../files/.dockerignore', $this->projectName . '/.dockerignore');
     }
 }

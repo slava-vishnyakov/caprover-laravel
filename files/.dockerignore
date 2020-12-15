@@ -1,0 +1,17 @@
+.env
+/.git*
+/.idea*
+.dockerignore
+vendor/
+.phpstorm.meta.php
+Dockerfile
+_ide_helper.php
+docker-compose.yml
+docker-compose-test-ci.yml
+docker-compose-prod.yml
+Makefile
+node_modules
+resources/docker/Dockerfile
+npm-debug.log
+/public/css/
+/public/js/
