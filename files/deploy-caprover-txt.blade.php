@@ -121,3 +121,41 @@ TODO:
 - /app/restarting for deploys
 - healthchecks
 
+---
+
+Minio storage
+-------------
+
+Run:
+```
+composer require league/flysystem-aws-s3-v3:"^1.0"
+```
+
+config/filesystems.php
+```
+'minio' => [
+    'driver' => 's3',
+    'endpoint' => env('MINIO_ENDPOINT'),
+    'use_path_style_endpoint' => true,
+    'key' => env('AWS_ACCESS_KEY_ID'),
+    'secret' => env('AWS_SECRET_ACCESS_KEY'),
+    'region' => env('AWS_DEFAULT_REGION'),
+    'bucket' => env('AWS_BUCKET'),
+],
+```
+
+.env / .env.example
+```
+FILESYSTEM_DRIVER=minio
+MINIO_ENDPOINT="http://127.0.0.1:9000"
+AWS_ACCESS_KEY_ID=testkey
+AWS_SECRET_ACCESS_KEY=miniosecret
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=test
+```
+(remove AWS_* below!)
+
+package.json:
+```
+"start-minio": "docker run -p 9000:9000 -e \"MINIO_ACCESS_KEY=testkey\" -e \"MINIO_SECRET_KEY=miniosecret\"  minio/minio server --address :9000 /data",
+```
