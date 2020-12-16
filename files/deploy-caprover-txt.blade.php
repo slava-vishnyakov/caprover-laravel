@@ -159,3 +159,5 @@ package.json:
 ```
 "start-minio": "docker run -p 9000:9000 -e \"MINIO_ACCESS_KEY=testkey\" -e \"MINIO_SECRET_KEY=miniosecret\"  minio/minio server --address :9000 /data",
 ```
+
+Start minio, open, create the `test` bucket
