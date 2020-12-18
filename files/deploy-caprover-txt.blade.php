@@ -120,6 +120,7 @@ TODO:
 - IS_MASTER for crons
 - /app/restarting for deploys
 - healthchecks
+- mix manifest to gitignore
 
 ---
 
