@@ -17,13 +17,13 @@ class InstallLaravel
 
     public function run()
     {
-        $postgresVersion = '13.1';
+        $postgresVersion = '16';
         $postgresPort = mt_rand(5234, 5234+1000);
         $testDbPostgresPort = $postgresPort + 1;
-        $redisVersion = '5';
+        $redisVersion = '7.2';
         $redisPort = mt_rand(6379, 6379+1000);
         $testRedisPort = $redisPort + 1;
-        $elasticVersion = '7.10.1';
+        $elasticVersion = '8.10.4';
         $elasticPort = mt_rand(9200, 9200+1000);
         $testElasticPort = $elasticPort + 1;
 
