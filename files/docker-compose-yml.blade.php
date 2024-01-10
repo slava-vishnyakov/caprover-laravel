@@ -1,6 +1,15 @@
 version: '2'
 
 services:
+  php-nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.php-nginx
+    ports:
+      - "8081:80"
+      - "5173:5173"
+    volumes:
+      - ".:/app"
 
   postgres:
     # psql --user=webapp --port={{ $postgresPort }} --password --host=0.0.0.0

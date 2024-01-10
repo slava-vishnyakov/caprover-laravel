@@ -35,8 +35,13 @@ class NewCommand extends Command
         $n = new InstallLaravel($name, $domain);
         $n->run();
 
-        $output->writeln('<info>Installed</info>');
-        $output->writeln("<info>cd {$name}; cat caprover-deploy.txt</info>");
+        $output->writeln('<info>Installed!</info>');
+        $output->writeln(<<<EOF
+        <info>
+        phpstorm {$name}
+        </info>
+        EOF
+);
     }
 
 

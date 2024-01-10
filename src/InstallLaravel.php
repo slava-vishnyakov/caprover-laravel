@@ -18,13 +18,13 @@ class InstallLaravel
     public function run()
     {
         $postgresVersion = '16';
-        $postgresPort = mt_rand(5234, 5234+1000);
+        $postgresPort = random_int(5234, 5234+1000);
         $testDbPostgresPort = $postgresPort + 1;
         $redisVersion = '7.2';
-        $redisPort = mt_rand(6379, 6379+1000);
+        $redisPort = random_int(6379, 6379+1000);
         $testRedisPort = $redisPort + 1;
         $elasticVersion = '8.10.4';
-        $elasticPort = mt_rand(9200, 9200+1000);
+        $elasticPort = random_int(9200, 9200+1000);
         $testElasticPort = $elasticPort + 1;
 
         $this->createDockerCompose(get_defined_vars());
@@ -37,6 +37,7 @@ class InstallLaravel
         $this->createCaproverDeployFile(get_defined_vars());
         $this->miscFiles();
         $this->installIdeHelpers();
+        $this->installMigratoro();
 
     }
 
@@ -62,6 +63,13 @@ class InstallLaravel
         file_put_contents($filename, $newContent);
     }
 
+    function fileReplaceRegex($filename, $search, $replace)
+    {
+        $text = file_get_contents($filename);
+        $newContent = preg_replace($search, $replace, $text);
+        file_put_contents($filename, $newContent);
+    }
+
     function fileInsertAfter($filename, $start, $replace)
     {
         $text = file_get_contents($filename);
@@ -82,7 +90,7 @@ class InstallLaravel
 
     public function updatePackageJson()
     {
-        $this->fileInsertAfter($this->projectName . '/package.json', "\"scripts\": {", $this->packageJsonFile());
+        $this->fileReplaceBetween($this->projectName . '/package.json', "\"scripts\": {", "},", $this->packageJsonFile());
     }
 
     public function updatePhpUnitXml($testDbPostgresPort, $testRedisPort)
@@ -101,9 +109,10 @@ class InstallLaravel
         $exampleFile = $this->projectName . '/.env.example';
         $envFile = $this->projectName . '/.env';
         foreach([$envFile, $exampleFile] as $file) {
-            $dbFragment = "DB_CONNECTION=pgsql\nDATABASE_URL=postgres://webapp:secret@localhost:$postgresPort/webapp?sslmode=disable";
+            $dbFragment = "DB_CONNECTION=pgsql\nDATABASE_URL=postgres://webapp:secret@postgres:5432/webapp?sslmode=disable";
             $this->fileReplaceBetween($file, 'DB_CONNECTION', 'DB_PASSWORD=', "{$dbFragment}\n");
             $this->fileReplace($file, "DB_PASSWORD=\n", "");
+            $this->fileReplaceRegex($file, "/APP_URL=.*?\n/", "APP_URL=http://127.0.0.1:8081\n");
             $this->fileReplace($file, "REDIS_HOST=redis", "REDIS_HOST=localhost");
             $this->fileReplace($file, "REDIS_PORT=6379", "REDIS_PORT=$redisPort");
         }
@@ -117,10 +126,7 @@ class InstallLaravel
 
     private function installIdeHelpers()
     {
-        system('cd ' . $this->projectName . ' && composer require barryvdh/laravel-ide-helper');
-//        $start = "         * Package Service Providers...\n         */\n";
-//        $replace = "        \\Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider::class,\n        ";
-//        $this->fileInsertAfter($this->projectName . '/config/app.php', $start, $replace);
+        system('cd ' . $this->projectName . ' && composer require nikic/php-parser:4.18 && composer require barryvdh/laravel-ide-helper:2.13');
         $this->fileInsertAfter($this->projectName . '/composer.json',
             '"Illuminate\\\\Foundation\\\\ComposerScripts::postAutoloadDump",',
             "\n            \"php artisan ide-helper:generate\",
@@ -152,14 +158,21 @@ class InstallLaravel
     public function packageJsonFile()
     {
         $domainDashes = preg_replace('#[^A-Za-z0-9]#', '-', $this->domain);
-        return str_replace('{DOMAIN_DASH}', $domainDashes, '
-        "serve": "php artisan serve",
-        "deploy": "caprover deploy -n CAPROVER_HOST_REPLACE_ME -a {DOMAIN_DASH} -b master",
-        "queue": "php artisan queue:work --tries=1",
-        "start-compose": "docker-compose up",
-        "stop-compose": "docker-compose stop",
-        "migrate": "php artisan migrate",
-        "migrate:rollback": "php artisan migrate:rollback",');
+        $actions = <<<"EOF"
+        "scripts": {
+                "start-compose": "docker-compose up",
+                "dev": "docker compose exec php-nginx npm install; docker compose exec php-nginx ./node_modules/vite/bin/vite.js --host",
+                "stop-compose": "docker-compose stop",
+                "deploy": "caprover deploy -n CAPROVER_HOST_REPLACE_ME -a tmp1 -b master",
+                "migrator": "docker compose exec php-nginx php artisan migrator && docker compose exec php-nginx php artisan ide-helper:model --reset --write",
+                "queue": "docker compose exec php-nginx php artisan queue:work --tries=1",
+                "migrate": "docker compose exec php-nginx php artisan migrate",
+                "migrate:rollback": "docker compose exec php-nginx php artisan migrate:rollback",
+                "build": "docker compose exec php-nginx npm install; docker compose exec php-nginx ./node_modules/vite/bin/vite build",
+                "bash": "docker compose exec php-nginx bash"
+            
+        EOF;
+        return str_replace('{DOMAIN_DASH}', $domainDashes, $actions);
     }
 
     public function createCaproverDeployFile($vars)
@@ -177,7 +190,11 @@ class InstallLaravel
     public function miscFiles()
     {
         mkdir($this->projectName . '/resources/docker/');
-        $files = ['cron.sh', 'entrypoint.sh', 'nginx.conf.tpl', 'php.ini', 'php-fpm.conf.tpl', 'queue.sh', 'supervisor.conf'];
+        mkdir($this->projectName . '/resources/docker/local/');
+        $files = [
+            'cron.sh', 'entrypoint.sh', 'nginx.conf.tpl', 'php.ini', 'php-fpm.conf.tpl', 'queue.sh', 'supervisor.conf',
+            'local/nginx.conf', 'local/php.ini', 'local/php-fpm.conf', 'local/supervisor.conf'
+        ];
         foreach ($files as $file) {
             copy(__DIR__ . '/../files/docker/' . $file, $this->projectName . '/resources/docker/' . $file);
         }
@@ -185,6 +202,7 @@ class InstallLaravel
         chmod($this->projectName . '/resources/docker/cron.sh', 0755);
 
         copy(__DIR__ . '/../files/Dockerfile', $this->projectName . '/Dockerfile');
+        copy(__DIR__ . '/../files/docker/local/Dockerfile.php-nginx', $this->projectName . '/Dockerfile.php-nginx');
     }
 
     private function updateTrustProxies()
@@ -197,5 +215,12 @@ class InstallLaravel
     private function createDockerignore()
     {
         copy(__DIR__ . '/../files/.dockerignore', $this->projectName . '/.dockerignore');
+    }
+
+    private function installMigratoro()
+    {
+        system('cd ' . $this->projectName . ' && touch database/schema.txt');
+        system('cd ' . $this->projectName . ' && composer config repositories.migratoro vcs https://github.com/niogu/migratoro');
+        system('cd ' . $this->projectName . ' && composer require --dev niogu/migratoro:dev-master');
     }
 }
