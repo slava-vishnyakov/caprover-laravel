@@ -64,19 +64,16 @@ USER appuser
 WORKDIR /app/
 COPY --chown=appuser:appuser package.json package-lock.json* /app/
 RUN npm install
-COPY webpack.mix.js tailwind.config.js* /app/
-COPY resources/js/ /app/resources/js/
-COPY resources/css/ /app/resources/css/
-RUN mkdir -p public/css
-RUN mkdir -p public/js
-RUN npm config set scripts-prepend-node-path
-RUN npm run prod
 
 ## Copy the rest of the application
 USER appuser
 COPY --chown=appuser:appuser . /app/
 RUN composer install --no-dev --prefer-dist
 
+# Build production
+RUN ./node_modules/vite/bin/vite.js build
+
+# Copy support files
 USER root
 COPY resources/docker/entrypoint.sh /entrypoint.sh
 RUN chmod 755 /entrypoint.sh
