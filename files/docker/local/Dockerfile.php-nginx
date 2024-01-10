@@ -47,7 +47,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
 USER root
 WORKDIR /
 RUN apt-get install -y curl
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
 RUN apt-get update && apt-get install -y nodejs
 
 COPY resources/docker/local/supervisor.conf /etc/supervisor/conf.d/supervisor.conf
