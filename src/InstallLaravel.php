@@ -160,9 +160,9 @@ class InstallLaravel
         $domainDashes = preg_replace('#[^A-Za-z0-9]#', '-', $this->domain);
         $actions = <<<"EOF"
         "scripts": {
-                "start-compose": "docker-compose up",
+                "start-compose": "docker compose up",
                 "dev": "docker compose exec php-nginx npm install; docker compose exec php-nginx ./node_modules/vite/bin/vite.js --host",
-                "stop-compose": "docker-compose stop",
+                "stop-compose": "docker compose stop",
                 "deploy": "caprover deploy -n CAPROVER_HOST_REPLACE_ME -a tmp1 -b master",
                 "migrator": "docker compose exec php-nginx php artisan migrator && docker compose exec php-nginx php artisan ide-helper:model --reset --write",
                 "queue": "docker compose exec php-nginx php artisan queue:work --tries=1",
