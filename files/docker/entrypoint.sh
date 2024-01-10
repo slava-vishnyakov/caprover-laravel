@@ -10,7 +10,7 @@ export PHP_SOCK_FILE=${PHP_SOCK_FILE:-'/run/php.sock'}
 export PHP_USER=${PHP_USER:-'appuser'}
 export PHP_GROUP=${PHP_GROUP:-'appuser'}
 export PHP_MODE=${PHP_MODE:-'0660'}
-export PHP_FPM_CONF=${PHP_FPM_CONF:-'/etc/php/8.0/fpm/php-fpm.conf'}
+export PHP_FPM_CONF=${PHP_FPM_CONF:-'/etc/php/8.2/fpm/php-fpm.conf'}
 
 export PORT=${PORT:-'80'}
 
