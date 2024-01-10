@@ -163,7 +163,7 @@ class InstallLaravel
                 "start-compose": "docker compose up",
                 "dev": "docker compose exec php-nginx npm install; docker compose exec php-nginx ./node_modules/vite/bin/vite.js --host",
                 "stop-compose": "docker compose stop",
-                "deploy": "caprover deploy -n CAPROVER_HOST_REPLACE_ME -a tmp1 -b master",
+                "deploy": "caprover deploy -n CAPROVER_HOST_REPLACE_ME -a CAPROVER_APP_NAME_REPLACE_ME -b master",
                 "migrator": "docker compose exec php-nginx php artisan migrator && docker compose exec php-nginx php artisan ide-helper:model --reset --write",
                 "queue": "docker compose exec php-nginx php artisan queue:work --tries=1",
                 "migrate": "docker compose exec php-nginx php artisan migrate",
