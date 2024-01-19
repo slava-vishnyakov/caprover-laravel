@@ -45,6 +45,25 @@ services:
     ports:
       - "{{ $testRedisPort }}:6379"
 
+# ELASTIC
+# -------
+#
+# To install:
+#
+# 1. Uncomment the "elastic:" block below
+#
+# 2. composer require elasticsearch/elasticsearch
+#
+# 3. Add this to .env:
+# ELASTICSEARCH_HOST=127.0.0.1
+# ELASTICSEARCH_PASSWORD=secret
+# ELASTICSEARCH_PORT=9412
+#
+# 4. Connect as
+# Elastic\Elasticsearch\ClientBuilder::create()
+# ->setHosts(['host' => env('ELASTICSEARCH_HOST'), 'port' => 9412, 'user' => 'elastic', 'password' => env('')])
+# ->build();
+#
 #  elastic:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:{{ $elasticVersion }}
 #    environment:
