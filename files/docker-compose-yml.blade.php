@@ -55,7 +55,7 @@ services:
 # 2. composer require elasticsearch/elasticsearch
 #
 # 3. Add this to .env:
-# ELASTICSEARCH_HOST=127.0.0.1
+# ELASTICSEARCH_HOST=elastic
 # ELASTICSEARCH_PORT={{ $testElasticPort }}
 #
 # 4. Connect as
