@@ -56,13 +56,11 @@ services:
 #
 # 3. Add this to .env:
 # ELASTICSEARCH_HOST=127.0.0.1
-# ELASTICSEARCH_PASSWORD=secret
-# ELASTICSEARCH_PORT=9412
+# ELASTICSEARCH_PORT={{ $testElasticPort }}
 #
 # 4. Connect as
-# Elastic\Elasticsearch\ClientBuilder::create()
-# ->setHosts(['host' => env('ELASTICSEARCH_HOST'), 'port' => 9412, 'user' => 'elastic', 'password' => env('')])
-# ->build();
+# $host = sprintf("http://%s:%s@%s:%s", 'elastic', env('ELASTICSEARCH_PASSWORD'), env('ELASTICSEARCH_HOST'), env('ELASTICSEARCH_PORT'));
+# ClientBuilder::create()->setHosts([$host])->build();
 #
 #  elastic:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:{{ $elasticVersion }}
