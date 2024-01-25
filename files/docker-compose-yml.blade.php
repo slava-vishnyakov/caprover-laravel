@@ -66,19 +66,15 @@ services:
 #
 #  elastic:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:{{ $elasticVersion }}
-#    environment:
-##        bootstrap.memory_lock: true
-##        discovery.type: single-node
-##        ES_JAVA_OPTS: -Xms2g -Xmx2g
-#        ELASTIC_PASSWORD: secret
-#        xpack.security.enabled: true
+#    environment: ['ES_JAVA_OPTS=-Xms512m -Xmx512m','bootstrap.memory_lock=true','discovery.type=single-node','xpack.security.enabled=false', 'xpack.security.enrollment.enabled=false']
 #    ports:
 #      - "{{ $elasticPort }}:9200"
 #
 #  elastic_test:
 #    image: docker.elastic.co/elasticsearch/elasticsearch:{{ $elasticVersion }}
-#    environment:
-#        ELASTIC_PASSWORD: secret
-#        xpack.security.enabled: true
+#    environment: ['ES_JAVA_OPTS=-Xms512m -Xmx512m','bootstrap.memory_lock=true','discovery.type=single-node','xpack.security.enabled=false', 'xpack.security.enrollment.enabled=false']
 #    ports:
 #      - "{{ $testElasticPort }}:9200"
+#
+# 5. Add to phpunit.xml:
+# <env name="ELASTICSEARCH_PORT" value="{{ $testElasticPort }}"/>
