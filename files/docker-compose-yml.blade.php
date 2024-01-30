@@ -56,7 +56,7 @@ services:
 #
 # 3. Add this to .env:
 # ELASTICSEARCH_HOST=elastic
-# ELASTICSEARCH_PORT={{ $testElasticPort }}
+# ELASTICSEARCH_PORT=9200
 #
 # 4. Connect as
 # $host = sprintf("http://%s:%s@%s:%s", 'elastic', env('ELASTICSEARCH_PASSWORD'), env('ELASTICSEARCH_HOST'), env('ELASTICSEARCH_PORT'));
@@ -75,4 +75,5 @@ services:
 #      - "{{ $testElasticPort }}:9200"
 #
 # 5. Add to phpunit.xml:
+# <env name="ELASTICSEARCH_HOST" value="127.0.0.1"/>
 # <env name="ELASTICSEARCH_PORT" value="{{ $testElasticPort }}"/>
