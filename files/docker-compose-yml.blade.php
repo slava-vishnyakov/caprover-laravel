@@ -40,6 +40,18 @@ services:
     ports:
       - "{{ $redisPort }}:6379"
 
+# REDIS
+# -----
+# $ composer require predis/predis
+# .env
+# REDIS_HOST=redis
+# REDIS_PASSWORD=null
+# REDIS_PORT=6379
+# REDIS_CLIENT=predis
+# CACHE_DRIVER=redis
+# QUEUE_CONNECTION=redis
+# SESSION_DRIVER=redis
+
   redis_test:
     image: redis:{{ $redisVersion }}
     ports:
