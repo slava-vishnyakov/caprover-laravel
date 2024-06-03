@@ -96,7 +96,7 @@ class InstallLaravel
     public function updatePhpUnitXml($testDbPostgresPort, $testRedisPort)
     {
         $connection = "postgres://webapp:secret@localhost:$testDbPostgresPort/webapp?sslmode=disable";
-        $replace = "\n        <server name=\"DATABASE_URL\" value=\"{$connection}\"/>\n" .
+        $replace = "\n        <server name=\"DB_URL\" value=\"{$connection}\"/>\n" .
                      "        <server name=\"DB_CONNECTION\" value=\"pgsql\"/>\n" .
                      "        <server name=\"REDIS_PORT\" value=\"{$testRedisPort}\"/>\n"
         ;
@@ -109,7 +109,7 @@ class InstallLaravel
         $exampleFile = $this->projectName . '/.env.example';
         $envFile = $this->projectName . '/.env';
         foreach([$envFile, $exampleFile] as $file) {
-            $dbFragment = "DB_CONNECTION=pgsql\nDATABASE_URL=postgres://webapp:secret@postgres:5432/webapp?sslmode=disable";
+            $dbFragment = "DB_CONNECTION=pgsql\nDB_URL=postgres://webapp:secret@postgres:5432/webapp?sslmode=disable";
             $this->fileReplaceBetween($file, 'DB_CONNECTION', 'DB_PASSWORD=', "{$dbFragment}\n");
             $this->fileReplace($file, "DB_PASSWORD=\n", "");
             $this->fileReplaceRegex($file, "/APP_URL=.*?\n/", "APP_URL=http://127.0.0.1:8081\n");
@@ -126,7 +126,7 @@ class InstallLaravel
 
     private function installIdeHelpers()
     {
-        system('cd ' . $this->projectName . ' && composer require nikic/php-parser:4.18 && composer require barryvdh/laravel-ide-helper:2.13');
+        system('cd ' . $this->projectName . ' && composer require nikic/php-parser:~5.0 && composer require --dev barryvdh/laravel-ide-helper:~3.0');
         $this->fileInsertAfter($this->projectName . '/composer.json',
             '"Illuminate\\\\Foundation\\\\ComposerScripts::postAutoloadDump",',
             "\n            \"php artisan ide-helper:generate\",
@@ -207,9 +207,9 @@ class InstallLaravel
 
     private function updateTrustProxies()
     {
-        $this->fileInsertAfter($this->projectName . '/app/Http/Middleware/TrustProxies.php',
-            'protected $proxies',
-            "= '*'");
+        $this->fileInsertAfter($this->projectName . '/bootstrap/app.php',
+            '->withMiddleware(function (Middleware $middleware) {',
+            "\n" . '        $middleware->trustProxies(at: \'*\');');
     }
 
     private function createDockerignore()
@@ -221,6 +221,6 @@ class InstallLaravel
     {
         system('cd ' . $this->projectName . ' && touch database/schema.txt');
         system('cd ' . $this->projectName . ' && composer config repositories.migratoro vcs https://github.com/niogu/migratoro');
-        system('cd ' . $this->projectName . ' && composer require --dev niogu/migratoro:dev-master');
+        system('cd ' . $this->projectName . ' && composer require --dev niogu/migratoro:dev-laravel-11');
     }
 }

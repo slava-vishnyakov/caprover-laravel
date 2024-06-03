@@ -17,7 +17,7 @@ services:
             CACHE_DRIVER: redis
             LOG_CHANNEL: errorlog
             DB_CONNECTION: pgsql
-            DATABASE_URL: postgres://$$cap_pg_user:$$cap_pg_pass@srv-captain--$$cap_appname-db/$$cap_pg_db
+            DB_URL: postgres://$$cap_pg_user:$$cap_pg_pass@srv-captain--$$cap_appname-db/$$cap_pg_db
             __REDIS_CLIENT: predis
             REDIS_HOST: srv-captain--$$cap_appname-redis
             REDIS_PASSWORD: $$cap_redis_password

@@ -24,7 +24,7 @@ chown appuser:appuser -R /app/storage/
 source .env
 
 if [[ "${DOCKER_COMPOSE}" == "true" ]]; then
-    export DATABASE_URL="postgres://webapp:secret@postgres:5432/webapp?sslmode=disable"
+    export DB_URL="postgres://webapp:secret@postgres:5432/webapp?sslmode=disable"
     export REDIS_URL="redis://@redis:6379/webapp?sslmode=disable"
 fi
 
