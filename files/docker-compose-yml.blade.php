@@ -89,3 +89,11 @@ services:
 # 5. Add to phpunit.xml:
 # <env name="ELASTICSEARCH_HOST" value="127.0.0.1"/>
 # <env name="ELASTICSEARCH_PORT" value="{{ $testElasticPort }}"/>
+
+# MEILI
+#  meili:
+#      image: getmeili/meilisearch:v1.6
+#      ports:
+#          - "7732:7700"
+#      environment:
+#          MEILI_MASTER_KEY: mhrPfDPDbz0U6iJ9qN6x
