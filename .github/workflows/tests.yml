@@ -83,7 +83,7 @@ jobs:
 
       - run: "cd project1 && docker compose up -d && sleep 5"
 
-      - run: "cd project1 && php artisan view:clear && php artisan cache:clear"
+      - run: "cd project1 && rm -rf storage/views/* && rm -rf storage/framework/cache/*"
 
       - run: "cd project1 && docker compose exec php-nginx php artisan migrate"
 
