@@ -207,10 +207,9 @@ class InstallLaravel
 
     private function updateTrustProxies()
     {
-        print("Updating TrustProxies NOT IMPLEMENTED\n");
-//        $this->fileInsertAfter($this->projectName . '/bootstrap/app.php',
-//            '->withMiddleware(function (Middleware $middleware) {',
-//            "\n" . '        $middleware->trustProxies(at: \'*\');');
+        $this->fileInsertAfter($this->projectName . '/bootstrap/app.php',
+            '->withMiddleware(function (Middleware $middleware) {',
+            "\n" . '        $middleware->trustProxies(at: \'*\');');
     }
 
     private function createDockerignore()
