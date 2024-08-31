@@ -77,7 +77,7 @@ jobs:
 
       - run: "cd project1 && sudo chown 32767:32767 -R ."
       - run: "cd project1 && sudo chown 1001:118 resources/views/welcome.blade.php"
-      - run: "cd project1 && sudo chown 1001:118 project1/database/schema.txt"
+      - run: "cd project1 && sudo chown 1001:118 database/schema.txt"
 
       - run: "cd project1 && docker compose exec php-nginx php artisan migrate"
 
