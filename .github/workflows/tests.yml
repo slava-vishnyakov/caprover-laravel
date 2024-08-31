@@ -55,7 +55,7 @@ jobs:
       #        uses: lhotari/action-upterm@v1
 
       - shell: 'script -q -e -c "bash {0}"'
-        run: "./caprover-laravel new project1 project1 --no-interaction"
+        run: "./caprover-laravel new project1 project1 --no-interaction --migrator"
 
       - run: "cd project1 && php artisan serve &"
 

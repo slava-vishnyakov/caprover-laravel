@@ -8,11 +8,13 @@ class InstallLaravel
 {
     private $projectName;
     private $domain;
+    private $installMigrator;
 
-    public function __construct($projectName, $domain)
+    public function __construct($projectName, $domain, $installMigrator=false)
     {
         $this->projectName = $projectName;
         $this->domain = $domain;
+        $this->installMigrator = $installMigrator;
     }
 
     public function run()
@@ -37,7 +39,9 @@ class InstallLaravel
         $this->createCaproverDeployFile(get_defined_vars());
         $this->miscFiles();
         $this->installIdeHelpers();
-        $this->installMigratoro();
+        if($this->installMigrator) {
+            $this->installMigratoro();
+        }
 
     }
 

@@ -19,6 +19,7 @@ class NewCommand extends Command
             ->addArgument('name', InputArgument::REQUIRED)
             ->addArgument('domain', InputArgument::REQUIRED)
             // https://github.com/laravel/installer/blob/master/src/NewCommand.php
+            ->addOption('migrator', null, InputOption::VALUE_NONE, 'Add migrator')
             ->addOption('dev', null, InputOption::VALUE_NONE, 'Installs the latest "development" release')
             ->addOption('git', null, InputOption::VALUE_NONE, 'Initialize a Git repository')
             ->addOption('branch', null, InputOption::VALUE_REQUIRED, 'The branch that should be created for a new repository')
@@ -54,6 +55,9 @@ class NewCommand extends Command
             $name,
         ];
         foreach($input->getOptions() as $option => $value) {
+            if($option === 'migrator') {
+                continue;
+            }
             if($value !== null && $value !== false) {
                 if(in_array($option, ['branch', 'github', 'organization', 'database', 'stack'])) {
                     $command[] = '--' . $option;
@@ -65,9 +69,13 @@ class NewCommand extends Command
         }
 
 
-        $this->runCommand($command, $output, $directory);
+        $isSuccess = $this->runCommand($command, $output, $directory);
+        if(!$isSuccess) {
+            $output->writeln('<error>Failed to run command</error>');
+            return 1;
+        }
 
-        $n = new InstallLaravel($name, $domain);
+        $n = new InstallLaravel($name, $domain, $input->getOption('migrator'));
         $n->run();
 
         $output->writeln('<info>Installed!</info>');
@@ -89,7 +97,6 @@ class NewCommand extends Command
      */
     protected function runCommand(array $command, OutputInterface $output, $directory)
     {
-        #print_r($command);
         $process = new Process($command, $directory, null, null, null);
 
         if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
@@ -99,7 +106,8 @@ class NewCommand extends Command
         $process->run(function ($type, $line) use ($output) {
             $output->write($line);
         });
-        #print_r($command);
+
+        return $process->isSuccessful();
     }
 
     protected function defaultBranch()
