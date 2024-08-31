@@ -126,7 +126,7 @@ class InstallLaravel
 
     private function installIdeHelpers()
     {
-        system('cd ' . $this->projectName . ' && composer require nikic/php-parser:~5.0 && composer require --dev barryvdh/laravel-ide-helper:~3.0');
+        system('cd ' . $this->projectName . ' && composer require barryvdh/laravel-ide-helper');
         $this->fileInsertAfter($this->projectName . '/composer.json',
             '"Illuminate\\\\Foundation\\\\ComposerScripts::postAutoloadDump",',
             "\n            \"php artisan ide-helper:generate\",
@@ -207,9 +207,10 @@ class InstallLaravel
 
     private function updateTrustProxies()
     {
-        $this->fileInsertAfter($this->projectName . '/bootstrap/app.php',
-            '->withMiddleware(function (Middleware $middleware) {',
-            "\n" . '        $middleware->trustProxies(at: \'*\');');
+        print("Updating TrustProxies NOT IMPLEMENTED\n");
+//        $this->fileInsertAfter($this->projectName . '/bootstrap/app.php',
+//            '->withMiddleware(function (Middleware $middleware) {',
+//            "\n" . '        $middleware->trustProxies(at: \'*\');');
     }
 
     private function createDockerignore()
@@ -219,6 +220,7 @@ class InstallLaravel
 
     private function installMigratoro()
     {
+        print("Installing Migratoro...\n");
         system('cd ' . $this->projectName . ' && touch database/schema.txt');
         system('cd ' . $this->projectName . ' && composer config repositories.migratoro vcs https://github.com/niogu/migratoro');
         system('cd ' . $this->projectName . ' && composer require --dev niogu/migratoro:dev-laravel-11');
