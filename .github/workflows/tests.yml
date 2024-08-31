@@ -59,11 +59,11 @@ jobs:
 
       - run: "cd project1 && docker compose up -d && sleep 5"
 
-      - run: "cd project1 && php artisan migrate"
+      - run: "cd project1 && docker compose exec php-nginx php artisan migrate"
 
       - run: |
           echo '<?php echo App\Models\User::count(); ?> users' > project1/resources/views/welcome.blade.php;
 
-      - run: "curl -s 127.0.0.1:8000"
+      - run: "curl -s 127.0.0.1:8081"
 
-      - run: "(curl -s 127.0.0.1:8000 | grep '0 users') || false"
+      - run: "(curl -s 127.0.0.1:8081 | grep '0 users') || false"
