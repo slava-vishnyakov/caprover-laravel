@@ -77,6 +77,8 @@ jobs:
 
       - run: "cd project1 && sudo chown 32767:32767 -R ."
 
+      - run: "cd project1 && sudo chown 1001:118 resources/views/welcome.blade.php"
+
       - run: "cd project1 && docker compose exec php-nginx php artisan migrate"
 
 #      - name: Setup upterm session
@@ -95,8 +97,6 @@ jobs:
           echo -e 'Thing\n    name: string\n' > project1/database/schema.txt;
 
       - run: "cd project1 && docker compose exec php-nginx php artisan migrator"
-
-      - run: "cd project1 && sudo chown 1001:118 resources/views/welcome.blade.php"
 
       - run: |
           echo '<?php App\Models\Thing::create(); echo App\Models\Thing::count(); ?> thing' > project1/resources/views/welcome.blade.php;
