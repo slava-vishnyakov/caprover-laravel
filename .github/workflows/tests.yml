@@ -87,11 +87,19 @@ jobs:
 
       - run: "cd project1 && docker compose exec php-nginx php artisan migrate"
 
+      - name: Setup upterm session
+        uses: "lhotari/action-upterm@v1"
+
       - run: |
           echo '<?php echo App\Models\User::count(); ?> users' > project1/resources/views/welcome.blade.php;
 
       - run: "curl -s 127.0.0.1:8081"
 
-      - run: "curl -s 127.0.0.1:8081"
+      - run: "(curl -s 127.0.0.1:8081 | grep '0 users') || false"
+
+      - run: |
+          echo -e 'Thing\n    name: string\n' > project1/database/schema.txt;
+
+      - run: "cd project1 && docker compose exec php-nginx php artisan migrator"
 
       - run: "(curl -s 127.0.0.1:8081 | grep '0 users') || false"
