@@ -224,8 +224,17 @@ class InstallLaravel
     private function installMigratoro()
     {
         print("Installing Migratoro...\n");
-        system('cd ' . $this->projectName . ' && touch database/schema.txt');
-        system('cd ' . $this->projectName . ' && composer config repositories.migratoro vcs https://github.com/niogu/migratoro');
-        system('cd ' . $this->projectName . ' && composer require --dev niogu/migratoro:dev-master');
+        $result = system('cd ' . $this->projectName . ' && touch database/schema.txt');
+        if($result === false) {
+            throw new RuntimeException("Failed to create database/schema.txt");
+        }
+        $result = system('cd ' . $this->projectName . ' && composer config repositories.migratoro vcs https://github.com/niogu/migratoro');
+        if($result === false) {
+            throw new RuntimeException("Failed to add migratoro repository");
+        }
+        $result = system('cd ' . $this->projectName . ' && composer require --dev niogu/migratoro:dev-master');
+        if($result === false) {
+            throw new RuntimeException("Failed to install migratoro");
+        }
     }
 }
