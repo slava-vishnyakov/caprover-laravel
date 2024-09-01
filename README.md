@@ -7,8 +7,10 @@ composer global require laravel/installer:dev-master
 
 git clone git@github.com:slava-vishnyakov/caprover-laravel.git
 (cd caprover-laravel && composer install)
-caprover-laravel/caprover-laravel new project project.com --migrator
+caprover-laravel/caprover-laravel new project project.com
 ```
+
+Add `--migratoro` flag to install [migratoro](https://github.com/niogu/migratoro/tree/master/docs).
 
 Creates a `project` folder suitable for deployment to `project.com`
 

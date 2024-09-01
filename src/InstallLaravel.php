@@ -8,13 +8,13 @@ class InstallLaravel
 {
     private $projectName;
     private $domain;
-    private $installMigrator;
+    private $installMigratoro;
 
-    public function __construct($projectName, $domain, $installMigrator=false)
+    public function __construct($projectName, $domain, $installMigratoro=false)
     {
         $this->projectName = $projectName;
         $this->domain = $domain;
-        $this->installMigrator = $installMigrator;
+        $this->installMigratoro = $installMigratoro;
     }
 
     public function run()
@@ -39,7 +39,7 @@ class InstallLaravel
         $this->createCaproverDeployFile(get_defined_vars());
         $this->miscFiles();
         $this->installIdeHelpers();
-        if($this->installMigrator) {
+        if($this->installMigratoro) {
             $this->installMigratoro();
         }
 
@@ -226,6 +226,6 @@ class InstallLaravel
         print("Installing Migratoro...\n");
         system('cd ' . $this->projectName . ' && touch database/schema.txt');
         system('cd ' . $this->projectName . ' && composer config repositories.migratoro vcs https://github.com/niogu/migratoro');
-        system('cd ' . $this->projectName . ' && composer require --dev niogu/migratoro:dev-laravel-11');
+        system('cd ' . $this->projectName . ' && composer require --dev niogu/migratoro');
     }
 }

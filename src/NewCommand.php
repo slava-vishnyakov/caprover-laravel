@@ -19,7 +19,7 @@ class NewCommand extends Command
             ->addArgument('name', InputArgument::REQUIRED)
             ->addArgument('domain', InputArgument::REQUIRED)
             // https://github.com/laravel/installer/blob/master/src/NewCommand.php
-            ->addOption('migrator', null, InputOption::VALUE_NONE, 'Add migrator')
+            ->addOption('migratoro', null, InputOption::VALUE_NONE, 'Add migratoro')
             ->addOption('dev', null, InputOption::VALUE_NONE, 'Installs the latest "development" release')
             ->addOption('git', null, InputOption::VALUE_NONE, 'Initialize a Git repository')
             ->addOption('branch', null, InputOption::VALUE_REQUIRED, 'The branch that should be created for a new repository')
@@ -55,7 +55,7 @@ class NewCommand extends Command
             $name,
         ];
         foreach($input->getOptions() as $option => $value) {
-            if($option === 'migrator') {
+            if($option === 'migratoro') {
                 continue;
             }
             if($value !== null && $value !== false) {
@@ -75,7 +75,7 @@ class NewCommand extends Command
             return 1;
         }
 
-        $n = new InstallLaravel($name, $domain, $input->getOption('migrator'));
+        $n = new InstallLaravel($name, $domain, $input->getOption('migratoro'));
         $n->run();
 
         $output->writeln('<info>Installed!</info>');
