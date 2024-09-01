@@ -226,6 +226,6 @@ class InstallLaravel
         print("Installing Migratoro...\n");
         system('cd ' . $this->projectName . ' && touch database/schema.txt');
         system('cd ' . $this->projectName . ' && composer config repositories.migratoro vcs https://github.com/niogu/migratoro');
-        system('cd ' . $this->projectName . ' && composer require --dev niogu/migratoro');
+        system('cd ' . $this->projectName . ' && composer require --dev niogu/migratoro:dev-master');
     }
 }
