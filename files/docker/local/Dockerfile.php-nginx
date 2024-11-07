@@ -1,7 +1,9 @@
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
 ENV TZ=Europe/London
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+ENV LC_ALL=en_US.UTF-8
+ENV LANG=en_US.UTF-8
 
 # Install PHP and extensions
 
