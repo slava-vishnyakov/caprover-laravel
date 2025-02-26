@@ -37,7 +37,7 @@ jobs:
         run: "composer global require laravel/installer:dev-master"
 
       - shell: 'script -q -e -c "bash {0}"'
-        run: "./caprover-laravel new project1 project1 --no-interaction --migratoro"
+        run: "yes | ./caprover-laravel new project1 project1 --no-interaction --migratoro"
 
       - run: "cd project1 && docker compose up -d && sleep 5"
 
